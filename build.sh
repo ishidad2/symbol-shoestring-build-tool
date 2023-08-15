@@ -2,7 +2,7 @@
 
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
-USER_NAME=ubutnu
+USER_NAME=ubuntu
 
 # targetフォルダが存在しない場合のみ作成
 if [ ! -d "target" ]; then
