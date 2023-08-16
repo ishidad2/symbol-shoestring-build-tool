@@ -78,6 +78,7 @@ EOS
 
 cat << EOS > target/README.md
 # githubからソースコード取得
+※元プロジェクトへのPRを送るなら自身のプロジェクトにforkしたプロジェクトからcloneしてください。
 
 \`\`\`
 git clone https://github.com/symbol/product.git
