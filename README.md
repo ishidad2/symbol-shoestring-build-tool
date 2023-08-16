@@ -3,14 +3,14 @@ shoestring build tool
 
 # 概要
 
-[symbol-shoestring](https://github.com/symbol/product/tree/main/tools/shoestring)をDockerコンテナ内で実行するためのツールです。
+[symbol-shoestring](https://github.com/symbol/product/tree/main/tools/shoestring)の日本語化をするためのプロジェクトです。
 
 Python3.9の環境をコンテナ化してあるので、Windows(WSL)、Mac、Linuxで動きます。
 
 # 実行
 
 ```
-curl -o build.sh https://raw.githubusercontent.com/ishidad2/symbol-shoestring-build-tool/main/build.sh && bash build.sh
+curl -o build.sh https://raw.githubusercontent.com/ishidad2/symbol-shoestring-build-tool/feat/lang-ja/build.sh && bash build.sh
 ```
 
 上記コマンド実行後、build.shというファイルが実行されます。
@@ -25,5 +25,6 @@ curl -o build.sh https://raw.githubusercontent.com/ishidad2/symbol-shoestring-bu
 
   続いて、 `docker-compose exec app bash` を実行してコンテナ内に入ってください。
   
-  コンテナ内では `python3 -m shoestring.wizard` が使用できます。（shoestringに関わるコマンドが実行できます）
-
+  コンテナ内で `symbol-shoestring` の開発を適時行ってください。
+  
+  より詳しい説明は このツールを実行後に作成される `target/README.md` を参照してください

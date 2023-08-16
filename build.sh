@@ -15,7 +15,8 @@ FROM ubuntu:20.04
 # 必要なものをインストール
 RUN apt-get update && \
     apt-get install -y sudo git vim curl ca-certificates wget build-essential libreadline-dev \
-    libncursesw5-dev libssl-dev libsqlite3-dev libgdbm-dev libbz2-dev liblzma-dev zlib1g-dev uuid-dev libffi-dev libdb-dev openssl && \
+    libncursesw5-dev libssl-dev libsqlite3-dev libgdbm-dev libbz2-dev liblzma-dev zlib1g-dev uuid-dev libffi-dev libdb-dev openssl \
+    language-pack-ja-base language-pack-ja locales && \
     apt-get clean -y
 
 # 任意バージョンのpython install
@@ -31,6 +32,7 @@ RUN apt-get autoremove -y
 
 ENV TZ=Asia/Tokyo
 RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
+RUN locale-gen ja_JP.UTF-8
 
 # ユーザーを作成
 RUN useradd -m --uid $USER_ID --groups sudo $USER_NAME && echo $USER_NAME:$USER_NAME | chpasswd
@@ -41,9 +43,10 @@ RUN echo "$USER_NAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER_NAME && \
 
 # 作成したユーザーに切り替える
 USER $USER_NAME
-WORKDIR /home/$USER_NAME
+WORKDIR /home/$USER_NAME/symbol
 
-RUN pip3 install symbol-shoestring
+# 日本語化
+RUN echo "export LANG=ja_JP.UTF-8" >> /home/$USER_NAME/.bashrc
 
 CMD ["tail", "-f", "/dev/null"]
 EOS
@@ -71,6 +74,76 @@ services:
     volumes:
       - ./target:/home/$USER_NAME/symbol
     user: "$USER_ID:$GROUP_ID"
+EOS
+
+cat << EOS > target/README.md
+# githubからソースコード取得
+
+\`\`\`
+git clone https://github.com/symbol/product.git
+\`\`\`
+
+\`\`\`
+cd product/tools/shoestring
+\`\`\`
+
+# dev_requirements.txtのインストール
+
+(docker compose downをすると初期化されるので毎回必要)
+
+\`\`\`
+pip3 install -r dev_requirements.txt
+\`\`\`
+
+# requirements.txtのインストール
+
+(docker compose downをすると初期化されるので毎回必要)
+
+\`\`\`
+pip3 install -r requirements.txt
+\`\`\`
+
+# パスの追加
+
+(docker compose downをすると初期化されるので毎回必要)
+
+\`\`\`
+PATH=\$PATH:/home/$USER_NAME/.local/bin
+\`\`\`
+
+# build実行
+
+(言語ファイル修正毎に必要)
+
+\`\`\`
+./scripts/ci/build.sh
+\`\`\`
+
+# インストール
+
+(コード修正毎に必要)
+
+\`\`\`
+pip3 install .
+\`\`\`
+
+# 実行
+
+\`\`\`
+PYTHONPATH=. python3 -m shoestring --help
+
+※wizardを日本語で起動する場合
+LC_MESSAGES=ja python3 -m shoestring.wizard
+\`\`\`
+
+
+# pipインストールパッケージを調べる
+
+\`\`\`
+pip3 show shoestring
+\`\`\`
+
+
 EOS
 
 echo "Dockerイメージのビルドが完了しました。"
