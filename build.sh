@@ -14,7 +14,7 @@ FROM ubuntu:20.04
 
 # 必要なものをインストール
 RUN apt-get update && \
-    apt-get install -y sudo vim curl ca-certificates wget build-essential libreadline-dev \
+    apt-get install -y sudo git vim curl ca-certificates wget build-essential libreadline-dev \
     libncursesw5-dev libssl-dev libsqlite3-dev libgdbm-dev libbz2-dev liblzma-dev zlib1g-dev uuid-dev libffi-dev libdb-dev openssl && \
     apt-get clean -y
 
@@ -34,6 +34,10 @@ RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
 # ユーザーを作成
 RUN useradd -m --uid $USER_ID --groups sudo $USER_NAME && echo $USER_NAME:$USER_NAME | chpasswd
+
+# ユーザーがNoPassでsudoが使えるように設定
+RUN echo "$USER_NAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER_NAME && \
+    chmod 0440 /etc/sudoers.d/$USER_NAME
 
 # 作成したユーザーに切り替える
 USER $USER_NAME
