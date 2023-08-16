@@ -13,6 +13,10 @@ Python3.9の環境をコンテナ化してあるので、Windows(WSL)、Mac、Li
 curl -o build.sh https://raw.githubusercontent.com/ishidad2/symbol-shoestring-build-tool/main/build.sh && bash build.sh
 ```
 
+上記コマンド実行後、build.shというファイルが実行されます。
+
+`input docker image name:` と表示されたらタグを打ってください（例：latestなど）
+
 # 補足　Dockerコンテナのビルド
 
 - 初回実行時には数分かかる可能性があります。
